@@ -18,40 +18,6 @@ with open('scaler.pkl', 'rb') as f:
     scaler = pickle.load(f)
 
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-def load_model_weights(model, model_weights, checkpoint_path, classifier_idx, in_features, device=device):
-    checkpoint = torch.load(checkpoint_path, map_location=device)
-    state_dict = checkpoint['model_state_dict']
-    model = model(weights)
-    model.classifier[classifier_idx] = nn.Linear(in_features=in_features, out_features=2, bias=True)
-    model.load_state_dict(state_dict=state_dict)
-    model = model.to(device)
-    return model 
-
-weights = torchvision.models.MobileNet_V3_Small_Weights.DEFAULT
-model = torchvision.models.mobilenet_v3_small
-checkpoint_path = "checkpoint_mobile_v3.pth"
-model = load_model_weights(model, weights, checkpoint_path, classifier_idx=3, in_features=1024)
-
-test_transform = transforms.Compose([
-    transforms.Resize((224, 224)),
-    transforms.ToTensor(),
-    transforms.Normalize(
-        mean=[0.485, 0.456, 0.406],
-        std= [0.229, 0.225, 0.224]
-    )
-])
-def empty_or_not(img):
-    model.eval()
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    img = Image.fromarray(img)
-    img = test_transform(img)
-    img = img.unsqueeze(0)
-    img = img.to(device)
-    with torch.inference_mode():
-        y_logits = model(img)
-    result = torch.argmax(y_logits, dim=1)
-    return result.item()
 
 
 def empty_or_not_svc(img):

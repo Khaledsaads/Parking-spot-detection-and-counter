@@ -19,10 +19,10 @@ def load_model_weights(model, model_weights, checkpoint_path, classifier_idx, in
     model = model.to(device)
     return model 
 
-weights = torchvision.models.EfficientNet_B0_Weights.DEFAULT
-model = torchvision.models.efficientnet_b0
-checkpoint_path = "checkpoint.pth"
-model = load_model_weights(model, weights, checkpoint_path, classifier_idx=1, in_features=1280)
+weights = torchvision.models.MobileNet_V3_Small_Weights.DEFAULT
+model = torchvision.models.mobilenet_v3_small
+checkpoint_path = "checkpoint_mobile_v3.pth"
+model = load_model_weights(model, weights, checkpoint_path, classifier_idx=3, in_features=1024)
 
 test_transform = transforms.Compose([
     transforms.Resize((224, 224)),
